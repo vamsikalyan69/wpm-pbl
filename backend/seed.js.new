@@ -1,0 +1,61 @@
+const mongoose = require('mongoose');
+const Animal = require('./models/AnimalModel');
+require('dotenv').config();
+
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/animal_diversity';
+
+const sampleAnimals = [
+  {
+    commonName: 'African Lion',
+    scientificName: 'Panthera leo',
+    description: 'Lions are large social cats living in prides. Males are recognized by their manes and both sexes are powerful predators in African ecosystems.',
+    habitat: ['Savanna', 'Grassland', 'Open woodland'],
+    diet: 'Carnivore',
+    images: [{ url: 'https://images.unsplash.com/photo-1546182990-dffeafbe841d' }]
+  },
+  {
+    commonName: 'Emperor Penguin',
+    scientificName: 'Aptenodytes forsteri',
+    description: 'The Emperor Penguin is the largest penguin species and breeds during the Antarctic winter; males incubate eggs on their feet.',
+    habitat: ['Antarctic coast', 'Pack ice'],
+    diet: 'Fish, krill, squid',
+    images: [{ url: 'https://images.unsplash.com/photo-1519681393784-d120267933ba' }]
+  },
+  {
+    commonName: 'Blue Morpho Butterfly',
+    scientificName: 'Morpho peleides',
+    description: 'The Blue Morpho has brilliant iridescent blue wings used for signaling and camouflage against predators.',
+    habitat: ['Tropical rainforest', 'Canopy'],
+    diet: 'Nectar, fermenting fruit',
+    images: [{ url: 'https://images.unsplash.com/photo-1505275350441-18ec6b196a20' }]
+  },
+  {
+    commonName: 'Giant Pacific Octopus',
+    scientificName: 'Enteroctopus dofleini',
+    description: 'A highly intelligent cephalopod known for problem solving and camouflage; can grow very large with long arms.',
+    habitat: ['Coastal North Pacific', 'Rocky reefs'],
+    diet: 'Crustaceans, fish, mollusks',
+    images: [{ url: 'https://images.unsplash.com/photo-1530319067432-5f0b7c91a0fa' }]
+  }
+];
+
+async function seedDatabase() {
+  try {
+    await mongoose.connect(MONGODB_URI);
+    console.log('Connected to MongoDB for seeding');
+    
+    await Animal.deleteMany({});
+    console.log('Cleared existing animals');
+    
+    await Animal.insertMany(sampleAnimals);
+    console.log('Added sample animals');
+    
+    console.log('Seed complete');
+    process.exit(0);
+  } catch (error) {
+    console.error('Error seeding database:', error);
+    process.exit(1);
+  }
+}
+
+seedDatabase();
